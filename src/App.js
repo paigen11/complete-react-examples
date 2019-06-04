@@ -1,26 +1,89 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import Person from './person/Person';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    persons: [
+      { id: 1, name: 'Paige', age: 30, hobby: 'Drawing' },
+      { id: 2, name: 'Sean', age: 42 },
+      { id: 3, name: 'George-Anthony', age: 34 },
+    ],
+    otherState: 'some other value',
+    showPersons: false,
+  };
+
+  // now unused - was used on person to show different data
+  switchNameHandler = newName => {
+    // console.log('click');
+    this.setState({
+      persons: [
+        { id: 1, name: newName, age: 30 },
+        { id: 2, name: 'TriniSean', age: 42, hobby: 'Motorcycle riding' },
+        { id: 3, name: 'GA', age: 33, hobby: 'Personal training' },
+      ],
+    });
+  };
+
+  deletePersonHandler = personIndex => {
+    const persons = [...this.state.persons];
+    persons.splice(personIndex, 1);
+    this.setState({ persons });
+  };
+
+  nameChangedHandler = (event, id) => {
+    // console.log(event.target.value);
+    const personIndex = this.state.persons.findIndex(p => {
+      return p.id === id;
+    });
+
+    const person = {
+      ...this.state.persons[personIndex],
+    };
+
+    person.name = event.target.value;
+
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+
+    this.setState({
+      persons,
+    });
+  };
+
+  togglePersonsHandler = () => {
+    const doesShow = this.state.showPersons;
+    this.setState({ showPersons: !doesShow });
+  };
+
+  render() {
+    let persons = null;
+    if (this.state.showPersons) {
+      persons = (
+        <div>
+          {this.state.persons.map((person, index) => {
+            return (
+              <Person
+                key={person.id}
+                click={() => this.deletePersonHandler(index)}
+                changed={event => this.nameChangedHandler(event, person.id)}
+                {...person}
+              />
+            );
+          })}
+        </div>
+      );
+    }
+
+    return (
+      <div className="App">
+        <h1>This is a play ground React App</h1>
+        <p>This is working</p>
+        <button onClick={this.togglePersonsHandler}>Toggle Persons</button>
+        {persons}
+      </div>
+    );
+  }
 }
 
 export default App;
