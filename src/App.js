@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Person from './person/Person';
+import Persons from './components/persons/Persons';
 import './App.css';
 
 class App extends Component {
@@ -14,16 +14,16 @@ class App extends Component {
   };
 
   // now unused - was used on person to show different data
-  switchNameHandler = newName => {
-    // console.log('click');
-    this.setState({
-      persons: [
-        { id: 1, name: newName, age: 30 },
-        { id: 2, name: 'TriniSean', age: 42, hobby: 'Motorcycle riding' },
-        { id: 3, name: 'GA', age: 33, hobby: 'Personal training' },
-      ],
-    });
-  };
+  // switchNameHandler = newName => {
+  //   // console.log('click');
+  //   this.setState({
+  //     persons: [
+  //       { id: 1, name: newName, age: 30 },
+  //       { id: 2, name: 'TriniSean', age: 42, hobby: 'Motorcycle riding' },
+  //       { id: 3, name: 'GA', age: 33, hobby: 'Personal training' },
+  //     ],
+  //   });
+  // };
 
   deletePersonHandler = personIndex => {
     const persons = [...this.state.persons];
@@ -60,18 +60,11 @@ class App extends Component {
     let persons = null;
     if (this.state.showPersons) {
       persons = (
-        <div>
-          {this.state.persons.map((person, index) => {
-            return (
-              <Person
-                key={person.id}
-                click={() => this.deletePersonHandler(index)}
-                changed={event => this.nameChangedHandler(event, person.id)}
-                {...person}
-              />
-            );
-          })}
-        </div>
+        <Persons
+          persons={this.state.persons}
+          clicked={this.deletePersonHandler}
+          changed={this.nameChangedHandler}
+        />
       );
     }
 
