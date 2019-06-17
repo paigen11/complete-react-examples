@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Persons from '../components/persons/Persons';
 import Cockpit from '../components/cockpit/Cockpit';
+import AuthContext from '../context/auth-context';
 import './App.css';
 
 class App extends Component {
@@ -13,6 +14,7 @@ class App extends Component {
     ],
     otherState: 'some other value',
     showPersons: false,
+    authenticated: false,
   };
 
   deletePersonHandler = personIndex => {
@@ -41,6 +43,10 @@ class App extends Component {
     this.setState({ showPersons: !doesShow });
   };
 
+  loginHandler = () => {
+    this.setState({ authenticated: true });
+  };
+
   render() {
     let persons = null;
     if (this.state.showPersons) {
@@ -49,18 +55,26 @@ class App extends Component {
           persons={this.state.persons}
           clicked={this.deletePersonHandler}
           changed={this.nameChangedHandler}
+          isAuthenticated={this.state.authenticated}
         />
       );
     }
 
     return (
       <div className="App">
-        <Cockpit
-          clicked={this.togglePersonsHandler}
-          showPersons={this.state.showPersons}
-          persons={this.state.persons}
-        />
-        {persons}
+        <AuthContext.Provider
+          value={{
+            authenticated: this.state.authenticated,
+            login: this.loginHandler,
+          }}
+        >
+          <Cockpit
+            clicked={this.togglePersonsHandler}
+            showPersons={this.state.showPersons}
+            persons={this.state.persons}
+          />
+          {persons}
+        </AuthContext.Provider>
       </div>
     );
   }
